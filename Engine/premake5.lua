@@ -1,5 +1,5 @@
 IncludeDir = {}
-IncludeDir["Engine"] = "../Engine/Source"
+IncludeDir["Engine"] = "Source"
 
 project "Engine"
 	kind "StaticLib"
@@ -33,7 +33,6 @@ project "Engine"
 	{
 		"SLATE_ENGINE",
 		"SLATE_DYNAMIC",
-		"SLATE_ROOT_DIR="  .. root_dir
 	}
 
 	filter 'architecture:x86_64'
@@ -46,8 +45,8 @@ project "Engine"
 		disablewarnings { 4307 }
 		characterset ("MBCS")
 
-		--pchheader "Precompiled.h"
-		--pchsource "Source/Precompiled.cpp"
+		pchheader "Precompiled.h"
+		pchsource "Source/Precompiled.cpp"
 
 		defines
 		{
@@ -57,6 +56,7 @@ project "Engine"
 			"_DISABLE_EXTENDED_ALIGNED_STORAGE",
 			"_SILENCE_CXX17_OLD_ALLOCATOR_MEMBERS_DEPRECATION_WARNING",
 			"_SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING",
+			"WITH_TRACY"
 		}
 
 		files
@@ -65,6 +65,7 @@ project "Engine"
 
 		links
 		{
+			"Dbghelp"
 		}
 
 		buildoptions
@@ -73,13 +74,13 @@ project "Engine"
 		}
 
 	filter "configurations:Debug"
-		defines { "SLATE_DEBUG", "_DEBUG"  }
+		defines { "SLATE_DEBUG", "_DEBUG", "RECORD_ALLOCATIONS"}
 		symbols "On"
 		runtime "Debug"
 		optimize "Off"
 
 	filter "configurations:Release"
-		defines { "SLATE_RELEASE" }
+		defines { "SLATE_RELEASE", "RECORD_ALLOCATIONS" }
 		optimize "Speed"
 		symbols "On"
 		runtime "Release"
